@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Alachisoft.NCache.Caching.Distributed;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Distributed;
@@ -23,15 +24,38 @@ namespace ASPNetInMemoryAndDistributedCaching
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            //Distributed Memory Cache
             services.AddDistributedMemoryCache();
+
+            //Distributed SQL Server Cache
+            //services.AddDistributedSqlServerCache(options =>
+            //{
+            //    options.ConnectionString =
+            //        Configuration["DistributedSQLServerCache"];
+            //    options.SchemaName = "dbo";
+            //    options.TableName = "TestCache";
+            //});
+
+            //Distributed Redis Cache
+            //services.AddStackExchangeRedisCache(options =>
+            //{
+            //    options.Configuration = "localhost";
+            //    options.InstanceName = "SampleInstance";
+            //});
+
+            //Distributed NCache Cache
+            //services.AddNCacheDistributedCache(configuration =>
+            //{
+            //    configuration.CacheName = "demoClusteredCache";
+            //    configuration.EnableLogs = true;
+            //    configuration.ExceptionsEnabled = true;
+            //});
             services.AddMemoryCache();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, IDistributedCache cache, IMemoryCache memoryCache)
         {
             lifetime.ApplicationStarted.Register(() =>
